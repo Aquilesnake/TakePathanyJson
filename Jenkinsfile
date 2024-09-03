@@ -9,19 +9,12 @@ pipeline {
         ALLOWED_ENVIRONMENTS = "cl-ist-ia4,cl-ist-ia9,cl-uat-pa5"
     }
 
- stages {
+    stages {
         stage('Checkout') {
             steps {
                 script {
                     deleteDir()
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: '*/main']], // Cambia 'main' si tu rama principal tiene otro nombre
-                        userRemoteConfigs: [[
-                            url: REPO_URL,
-                            credentialsId: 'github-credentials' // Asegúrate de que coincida con tus credenciales de GitHub
-                        ]]
-                    ])
+                    git url: REPO_URL, branch: 'feature_ct'
                     sh "ls -la"
                     echo "Repository cloned successfully"
                 }
