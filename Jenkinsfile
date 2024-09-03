@@ -16,7 +16,7 @@ pipeline {
                     deleteDir()
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: '*/main']], // Cambia 'main' si tu rama principal tiene otro nombre
+                        branches: [[name: '*/feature_ct']], // Cambia 'main' si tu rama principal tiene otro nombre
                         userRemoteConfigs: [[
                             url: REPO_URL,
                             credentialsId: 'github-credentials' // Asegúrate de que coincida con tus credenciales de GitHub
