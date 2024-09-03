@@ -4,7 +4,7 @@ pipeline {
     environment {
         REPO_NAME = 'Test_createlistfromPath'
         REPO_URL = "https://github.com/Aquilesnake/${REPO_NAME}.git"
-        BASE_PATH = "Test_createlistfromPath/"
+        BASE_PATH = "environment/"
         ALLOWED_ENVIRONMENTS = "cl-ist-ia4,cl-ist-ia9,cl-uat-pa5"
     }
 
@@ -31,7 +31,7 @@ pipeline {
                     
                     environments.each { env ->
                         echo "Processing environment: ${env}"
-                        def envPath = "${BASE_PATH}${env}\\manifests" // Rutas con \\ para Windows
+                        def envPath = "${BASE_PATH}${env}\\manifests" // Ruta ajustada para Windows
                         echo "Searching for job-metadata.json files in: ${envPath}"
                         
                         // Check if the directory exists
@@ -42,7 +42,7 @@ pipeline {
                         
                         // List contents of the directory for debugging
                         echo "Directory structure:"
-                        bat "dir /B /S ${envPath} || exit 0" // Comando `find` no está disponible en Windows, `dir /B /S` lista archivos recursivamente
+                        bat "dir /B /S ${envPath} || exit 0" // Listar archivos recursivamente
                         
                         // Find all job-metadata.json files recursively
                         def findCommand = "for /R \"${envPath}\" %i in (job-metadata.json) do @echo %i"
