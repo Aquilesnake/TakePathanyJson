@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        GITHUB_CREDENTIALS = credentials('github-credentials') // Actualiza esto con el ID de tus credenciales de GitHub en Jenkins
         REPO_NAME = 'Test_createlistfromPath'
         REPO_URL = "https://github.com/Aquilesnake/${REPO_NAME}.git"
         BASE_PATH = "Test_createlistfromPath/"
@@ -14,7 +13,7 @@ pipeline {
             steps {
                 script {
                     deleteDir()
-                    git url: REPO_URL, branch: 'feature_ct'
+                    git url: REPO_URL, branch: 'main'
                     sh "ls -la"
                     echo "Repository cloned successfully"
                 }
