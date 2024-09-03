@@ -14,7 +14,7 @@ pipeline {
                 script {
                     deleteDir()
                     git url: REPO_URL, branch: 'main'
-                    sh "ls -la"
+                    bat "dir /B" // Comando equivalente a `ls -la` en Windows
                     echo "Repository cloned successfully"
                 }
             }
@@ -31,7 +31,7 @@ pipeline {
                     
                     environments.each { env ->
                         echo "Processing environment: ${env}"
-                        def envPath = "${BASE_PATH}${env}/manifests"
+                        def envPath = "${BASE_PATH}${env}\\manifests" // Rutas con \\ para Windows
                         echo "Searching for job-metadata.json files in: ${envPath}"
                         
                         // Check if the directory exists
@@ -42,12 +42,12 @@ pipeline {
                         
                         // List contents of the directory for debugging
                         echo "Directory structure:"
-                        sh "find ${envPath} -type d || true"
+                        bat "dir /B /S ${envPath} || exit 0" // Comando `find` no está disponible en Windows, `dir /B /S` lista archivos recursivamente
                         
                         // Find all job-metadata.json files recursively
-                        def findCommand = "find ${envPath} -type f -name 'job-metadata.json' || true"
+                        def findCommand = "for /R \"${envPath}\" %i in (job-metadata.json) do @echo %i"
                         echo "Executing command: ${findCommand}"
-                        def metadataFiles = sh(script: findCommand, returnStdout: true).trim()
+                        def metadataFiles = bat(script: findCommand, returnStdout: true).trim()
                         
                         if (metadataFiles.isEmpty()) {
                             echo "No job-metadata.json files found in ${envPath}"
@@ -57,13 +57,13 @@ pipeline {
                         echo "Found the following job-metadata.json files:"
                         echo metadataFiles
                         
-                        metadataFiles.split('\n').each { filePath ->
+                        metadataFiles.split('\r\n').each { filePath -> // Windows usa `\r\n` como separador de líneas
                             echo "Processing file: ${filePath}"
                             def relativePath = filePath.minus(BASE_PATH)
-                            def pathParts = relativePath.tokenize('/')
+                            def pathParts = relativePath.tokenize('\\') // Tokenize por `\\` en lugar de `/`
                             def projectName = pathParts.size() > 2 ? pathParts[2] : ''
                             def appName = pathParts.size() > 3 ? pathParts[3] : ''
-                            def parentPath = pathParts[0..-2].join('/')
+                            def parentPath = pathParts[0..-2].join('\\')
                             
                             try {
                                 def fileContent = readFile(file: filePath)
@@ -96,7 +96,7 @@ pipeline {
                     echo csvContent
                     
                     echo "Verifying CSV file content:"
-                    sh "cat output.csv || true"
+                    bat "type output.csv || exit 0" // Comando `type` es el equivalente a `cat` en Windows
                 }
             }
         }
