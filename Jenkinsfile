@@ -35,14 +35,14 @@ pipeline {
                         echo "Searching for job-metadata.json files in: ${envPath}"
 
                         // Verifica si el directorio existe
-                        def dirExists = bat(script: "if exist ${envPath} (echo found) else (echo notfound)", returnStdout: true).trim()
+                        def dirExists = bat(script: "if exist \"${envPath}\" (echo found) else (echo notfound)", returnStdout: true).trim()
                         if (dirExists.contains("notfound")) {
                             echo "Warning: Directory ${envPath} does not exist. Skipping this environment."
                             return // Salta a la siguiente iteración
                         }
 
                         // Encuentra todos los archivos job-metadata.json de manera recursiva
-                        def findCommand = "for /R \"${envPath}\" %%i in (job-metadata.json) do @echo %%i"
+                        def findCommand = "dir \"${envPath}\" /B /S /A:-D | findstr /I \"job-metadata.json\""
                         echo "Executing command: ${findCommand}"
                         def metadataFiles = bat(script: findCommand, returnStdout: true).trim()
 
