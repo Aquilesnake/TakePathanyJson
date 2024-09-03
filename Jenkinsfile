@@ -31,7 +31,7 @@ pipeline {
 
                     environments.each { env ->
                         echo "Processing environment: ${env}"
-                        def envPath = "${BASE_PATH}\\${env}\\manifests"
+                        def envPath = "${BASE_PATH}/${env}/manifests".replace('/', '\\')
                         echo "Searching for job-metadata.json files in: ${envPath}"
 
                         // Verifica si el directorio existe
@@ -56,11 +56,11 @@ pipeline {
 
                         metadataFiles.split('\r\n').each { filePath ->
                             echo "Processing file: ${filePath}"
-                            def relativePath = filePath.minus("${BASE_PATH}\\")
-                            def pathParts = relativePath.tokenize('\\')
+                            def relativePath = filePath.minus("${BASE_PATH}\\").replace('\\', '/')
+                            def pathParts = relativePath.tokenize('/')
                             def projectName = pathParts.size() > 2 ? pathParts[2] : ''
                             def appName = pathParts.size() > 3 ? pathParts[3] : ''
-                            def parentPath = pathParts[0..-2].join('\\')
+                            def parentPath = pathParts[0..-2].join('/')
 
                             try {
                                 def fileContent = readFile(file: filePath)
