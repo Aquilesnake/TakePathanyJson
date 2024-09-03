@@ -4,7 +4,7 @@ pipeline {
     environment {
         REPO_NAME = 'Test_createlistfromPath'
         REPO_URL = "https://github.com/Aquilesnake/${REPO_NAME}.git"
-        BASE_PATH = "environment/"
+        BASE_PATH = "environment\\"
         ALLOWED_ENVIRONMENTS = "cl-ist-ia4,cl-ist-ia9,cl-uat-pa5"
     }
 
@@ -19,7 +19,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Scan and Extract Data') {
             steps {
                 script {
@@ -31,7 +31,7 @@ pipeline {
                     
                     environments.each { env ->
                         echo "Processing environment: ${env}"
-                        def envPath = "${BASE_PATH}${env}/manifests"
+                        def envPath = "${BASE_PATH}${env}\\manifests"
                         echo "Searching for job-metadata.json files in: ${envPath}"
                         
                         // Check if the directory exists
@@ -62,7 +62,7 @@ pipeline {
                             def parentPath = pathParts[0..-2].join('/')
                             
                             try {
-                                def fileContent = readFile(file: filePath)
+                                def fileContent = readFile file: filePath
                                 echo "Contents of ${filePath}:"
                                 echo fileContent
                                 
