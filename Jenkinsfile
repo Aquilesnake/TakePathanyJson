@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        BITBUCKET_CREDENTIALS = credentials('bitbucket-credentials')
         REPO_NAME = 'cldf-app-gitops'
         REPO_URL = "https://bitbucket.org/your-organization/${REPO_NAME}.git"
         BASE_PATH = "cldf-app-gitops/environment/"
@@ -14,14 +13,7 @@ pipeline {
             steps {
                 script {
                     deleteDir()
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: '*/master']],
-                        userRemoteConfigs: [[
-                            url: REPO_URL,
-                            credentialsId: 'bitbucket-credentials'
-                        ]]
-                    ])
+                    git url: REPO_URL, branch: 'main'
                     sh "ls -la"
                     echo "Repository cloned successfully"
                 }
