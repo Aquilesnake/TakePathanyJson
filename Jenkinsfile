@@ -5,7 +5,7 @@ pipeline {
         REPO_NAME = 'Test_createlistfromPath'
         REPO_URL = "https://github.com/Aquilesnake/${REPO_NAME}.git"
         BASE_PATH = "environment/"
-        ALLOWED_ENVIRONMENTS = "cl-ist-ia4,cl-ist-ia9,cl-uat-pa5"
+        ALLOWED_ENVIRONMENTS = "var1-var2-var3"
     }
 
     stages {
@@ -37,7 +37,7 @@ pipeline {
                         }
                         
                         // Find all job-metadata.json files recursively
-                        def findCommand = "find ${envPath} -type f -name 'job-metadata.json'"
+                        def findCommand = "find ${envPath} -type f -name 'data.json'"
                         def findResult = sh(script: findCommand, returnStdout: true).trim()
                         
                         if (findResult) {
