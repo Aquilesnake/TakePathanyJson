@@ -5,7 +5,7 @@ pipeline {
         REPO_NAME = 'Test_createlistfromPath'
         REPO_URL = "https://github.com/Aquilesnake/${REPO_NAME}.git"
         BASE_PATH = "environment/"
-        ALLOWED_ENVIRONMENTS = "cl-ist-ia4,cl-ist-ia9,cl-uat-pa5"
+        ALLOWED_ENVIRONMENTS = "cl-uat-pa5"
     }
 
     stages {
@@ -48,7 +48,7 @@ pipeline {
                                 echo "Processing file: ${filePath}"
                                 try {
                                     def fileContent = readFile(file: filePath)
-                                    def jsonData = readJSON text: fileContent
+                                    def jsonData = parseJSON(fileContent)
                                     
                                     def relativePath = filePath.minus(BASE_PATH)
                                     def pathParts = relativePath.tokenize('/')
@@ -91,4 +91,9 @@ pipeline {
             echo "Pipeline failed. Check the logs for details."
         }
     }
+}
+
+def parseJSON(String json) {
+    def slurper = new groovy.json.JsonSlurper()
+    return slurper.parseText(json)
 }
